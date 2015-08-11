@@ -92,6 +92,9 @@ class BaseWorker(threading.Thread):
             except SuricataReturnException as err:
                 log.debug("Unable to negotiate version with server: {}".format(err))
                 time.sleep(1)
+            except KeyboardInterrupt:
+                log.info("Shutting down upon user request")
+                system.exit()
             except Exception as err:
                 log.debug("Got error: {}".format(err))
                 time.sleep(1)
