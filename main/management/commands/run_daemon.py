@@ -108,7 +108,7 @@ class BaseWorker(threading.Thread):
 
 class ResultsRetriever(BaseWorker):
 
-    def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
+    def __init__(self, socket_path, group=None, target=None, name="ResultsRetriever", args=(), kwargs={}):
         log.info("Initializing new ResultsRetriever thread")
         super(ResultsRetriever, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
 
@@ -139,6 +139,7 @@ class ResultsRetriever(BaseWorker):
 
         res = sc.send_command('pcap-file-list', None)
         sc.close()
+        log.debug("Command 'pcap-file-list' returned: {}".format(res))
 
         if task.pcap_file.name in res["files"]:
             log.info("[{}] File {} is still queued".format(task.id, task.pcap_file.name))
@@ -167,7 +168,7 @@ class ResultsRetriever(BaseWorker):
 class TasksSubmitter(BaseWorker):
     def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
         log.info("Initializing new TasksSubmitter thread")
-        super(TasksSubmitter, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
+        super(TasksSubmitter, self).__init__(socket_path, group=group, target=target, name="TasksSubmitter", args=args, kwargs=kwargs)
 
     def run(self):
         while self.running:
