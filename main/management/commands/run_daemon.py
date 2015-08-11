@@ -88,7 +88,7 @@ class BaseWorker(threading.Thread):
         task.save()
 
     def _connect(self, sc):
-        while True:
+        while self.running:
             log.debug("Attempting connection to socket {}".format(self.SOCKET_PATH))
             try:
                 sc.connect()
