@@ -38,14 +38,21 @@ class Command(BaseCommand):
         rr = ResultsRetriever(SOCKET_PATH)
         rr.start()
 
-        # Join both the children
-        ts.join()
-        rr.join()
-
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            log.info("Shutting down on user's request")
+            ts.terminate()
+            rr.terminate()
+            # Join both the children
+            ts.join()
+            rr.join()
 
 class BaseWorker(threading.Thread):
 
     def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
+        self.running = True
         self.SOCKET_PATH = socket_path
         super(BaseWorker, self).__init__(group=group, target=target, name=name, args=args, kwargs=kwargs)
 
@@ -92,12 +99,12 @@ class BaseWorker(threading.Thread):
             except SuricataReturnException as err:
                 log.debug("Unable to negotiate version with server: {}".format(err))
                 time.sleep(1)
-            except KeyboardInterrupt:
-                log.info("Shutting down upon user request")
-                system.exit()
             except Exception as err:
                 log.debug("Got error: {}".format(err))
                 time.sleep(1)
+
+    def terminate(self):
+        self.running = False
 
 class ResultsRetriever(BaseWorker):
 
@@ -106,7 +113,7 @@ class ResultsRetriever(BaseWorker):
         super(ResultsRetriever, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
 
     def run(self):
-        while True:
+        while sef.running:
             log.debug("Fetching queued tasks")
             tasks = self._fetch_queued_tasks()
             log.debug("Got {} queued tasks".format(len(tasks)))
@@ -163,7 +170,7 @@ class TasksSubmitter(BaseWorker):
         super(TasksSubmitter, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
 
     def run(self):
-        while True:
+        while self.running:
             log.debug("Fetching new tasks")
             tasks = self._fetch_new_tasks()
             log.debug("Got {} new tasks".format(len(tasks)))
