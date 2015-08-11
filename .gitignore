@@ -18,7 +18,7 @@ docs/book/src/_build/
 .idea/
 
 # Ignore Django secret_key
-web/web/secret_key.py
+pcapoptikon/secret_key.py
 
 # Ignore others files
 .settings/
