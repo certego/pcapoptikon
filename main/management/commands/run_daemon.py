@@ -28,7 +28,7 @@ class Command(BaseCommand):
         if options.get("socket", None):
             SOCKET_PATH = options["socket"]
         else:
-            SOCKET_PATH = "@e_localstatedir@/suricata-command.socket"
+            SOCKET_PATH = "/var/run/suricata/suricata-command.socket"
 
         # Start the task submitter thread
         ts = TasksSubmitter(SOCKET_PATH)
