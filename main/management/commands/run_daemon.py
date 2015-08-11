@@ -113,7 +113,7 @@ class ResultsRetriever(BaseWorker):
         super(ResultsRetriever, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
 
     def run(self):
-        while sef.running:
+        while self.running:
             log.debug("Fetching queued tasks")
             tasks = self._fetch_queued_tasks()
             log.debug("Got {} queued tasks".format(len(tasks)))
