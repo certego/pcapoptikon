@@ -141,7 +141,7 @@ class ResultsRetriever(BaseWorker):
         sc.close()
         log.debug("Command 'pcap-file-list' returned: {}".format(res))
 
-        if task.pcap_file.name in res["files"]:
+        if task.pcap_file.name in res['message']['files']:
             log.info("[{}] File {} is still queued".format(task.id, task.pcap_file.name))
             return
         else:
