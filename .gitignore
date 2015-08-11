@@ -1,0 +1,29 @@
+# Ignore Python byte code
+*.pyc
+
+# Ignore certificates
+*.pem
+*.cert
+
+# Ignore OS generated files
+.DS_Store*
+.AppleDouble
+ehthumbs.db
+Icon?
+Thumbs.db
+.directory
+
+# Ignore development files
+docs/book/src/_build/
+.idea/
+
+# Ignore Django secret_key
+web/web/secret_key.py
+
+# Ignore others files
+.settings/
+.project
+.pydevproject
+*.gz
+*.swp
+.ropeproject/
