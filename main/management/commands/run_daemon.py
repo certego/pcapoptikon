@@ -15,13 +15,15 @@ from suricatasc import *
 from idstools.unified2 import FileEventReader
 from idstools import maps
 
+log = logging.getLogger(__name__)
+
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('socket', metavar='socket', nargs='?', help='socket file to connnect to', default=None)
 
     def handle(self, *args, **options):
-        logger.info("Starting up pcapoptikon daemon")
+        log.info("Starting up pcapoptikon daemon")
 
         if options.get("socket", None):
             SOCKET_PATH = options["socket"]
@@ -54,27 +56,27 @@ class BaseWorker(threading.Thread):
         return Task.objects.filter(status__exact=Task.STATUS_QUEUED).order_by('submitted_on')
 
     def _mark_as_new(self, task):
-        logger.debug("[{}] Marking task as new".format(task.id))
+        log.debug("[{}] Marking task as new".format(task.id))
         task.status = Task.STATUS_NEW
         task.save()
 
     def _mark_as_processing(self, task):
-        logger.debug("[{}] Marking task as processing".format(task.id))
+        log.debug("[{}] Marking task as processing".format(task.id))
         task.status = Task.STATUS_PROCESSING
         task.save()
 
     def _mark_as_queued(self, task):
-        logger.debug("[{}] Marking task as queued".format(task.id))
+        log.debug("[{}] Marking task as queued".format(task.id))
         task.status = Task.STATUS_QUEUED
         task.save()
 
     def _mark_as_failed(self, task):
-        logger.debug("[{}] Marking task as failed".format(task.id))
+        log.debug("[{}] Marking task as failed".format(task.id))
         task.status = Task.STATUS_FAILED
         task.save()
 
     def _mark_as_completed(self, task):
-        logger.debug("[{}] Marking task as completed".format(task.id))
+        log.debug("[{}] Marking task as completed".format(task.id))
         task.status = Task.STATUS_DONE
         task.save()
 
@@ -98,19 +100,19 @@ class ResultsRetriever(BaseWorker):
 
     def run(self):
         while True:
-            logger.debug("Fetching queued tasks")
+            log.debug("Fetching queued tasks")
             tasks = self._fetch_queued_tasks()
-            logger.debug("Got {} queued tasks".format(len(tasks)))
+            log.debug("Got {} queued tasks".format(len(tasks)))
 
             for task in tasks:
                 try:
                     self.retrieve_results(task)
                 except Exception as err:
-                    logger.exception("[{}] Got exception while retrieving results: {}".format(task.id, err))
+                    log.exception("[{}] Got exception while retrieving results: {}".format(task.id, err))
                     self._mark_as_failed(task)
 
             # Sleep when no pending tasks
-            logger.info("Sleeping for {} seconds waiting for new tasks".format(10))
+            log.info("Sleeping for {} seconds waiting for new tasks".format(10))
             time.sleep(10)
 
     def retrieve_results(self, task):
@@ -132,11 +134,11 @@ class ResultsRetriever(BaseWorker):
                 log_file_pattern = os.path.join(task.results_dir, 'snort.unified2.*')
                 log_file = glob.glob(log_file_pattern)[0]
             except IndexError as err:
-                logger.exception("[{}] Unable to find a log file in {}".format(task.id, log_file_pattern))
+                log.exception("[{}] Unable to find a log file in {}".format(task.id, log_file_pattern))
                 self._mark_as_failed(task)
                 return
             except Exception as err:
-                logger.exception("[{}] Got exception while retrieving results: {}".format(task.id, err))
+                log.exception("[{}] Got exception while retrieving results: {}".format(task.id, err))
                 self._mark_as_failed(task)
                 return
 
@@ -151,20 +153,20 @@ class ResultsRetriever(BaseWorker):
 class TasksSubmitter(BaseWorker):
     def run(self):
         while True:
-            logger.debug("Fetching new tasks")
+            log.debug("Fetching new tasks")
             tasks = self._fetch_new_tasks()
-            logger.debug("Got {} new tasks".format(len(tasks)))
+            log.debug("Got {} new tasks".format(len(tasks)))
 
             for task in tasks:
                 self._mark_as_processing(task)
                 try:
                     self.submit_task(task)
                 except Exception as e:
-                    logger.exception("[{}] Got CalledProcessError exception: {}".format(task.id, e))
+                    log.exception("[{}] Got CalledProcessError exception: {}".format(task.id, e))
                     self._mark_as_failed(task)
 
             # Sleep when no pending tasks
-            logger.info("Sleeping for {} seconds waiting for new tasks".format(10))
+            log.info("Sleeping for {} seconds waiting for new tasks".format(10))
             time.sleep(10)
 
     def submit_task(self, task):
