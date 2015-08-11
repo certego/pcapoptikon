@@ -112,7 +112,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': u'%(asctime)s [%(name)s] [%(threadName)s] %(levelname)s: %(message)s'
         },
     },
     'handlers': {
