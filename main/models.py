@@ -28,6 +28,6 @@ class Task(models.Model):
     pcap_file               = models.FileField('PCAP File', upload_to='extracted_files', max_length=512, blank=False, null=False)
     submitted_on            = models.DateTimeField('Added on', default=add_now, null=False, blank=True)
     user                    = models.ForeignKey(User)
-    status                  = models.IntegerField('Task status', default=self.STATUS_NEW, null=False, blank=True, choices=self.STATUS_CHOICES)
+    status                  = models.IntegerField('Task status', default=STATUS_NEW, null=False, blank=True, choices=STATUS_CHOICES)
     results_dir             = models.CharField('Temporary results dir', max_length=512, blank=True, null=True, default=None)
     results                 = jsonfield.JSONField('Results', null=True, blank=True, default=None, load_kwargs={'object_pairs_hook': collections.OrderedDict})
