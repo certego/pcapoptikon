@@ -1,4 +1,4 @@
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import ApiKeyAuthentication
 from pcapoptikon.authorization import CertegoDjangoAuthorization
 from pcapoptikon.fields import Base64FileField
