@@ -98,6 +98,10 @@ class BaseWorker(threading.Thread):
 
 class ResultsRetriever(BaseWorker):
 
+    def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
+        log.info("Initializing new ResultsRetriever thread")
+        super(ResultsRetriever, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
+
     def run(self):
         while True:
             log.debug("Fetching queued tasks")
@@ -151,6 +155,10 @@ class ResultsRetriever(BaseWorker):
             self._mark_as_completed(task)
 
 class TasksSubmitter(BaseWorker):
+    def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
+        log.info("Initializing new TasksSubmitter thread")
+        super(TasksSubmitter, self).__init__(socket_path, group=group, target=target, name=name, args=args, kwargs=kwargs)
+
     def run(self):
         while True:
             log.debug("Fetching new tasks")
