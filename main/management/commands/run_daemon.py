@@ -159,7 +159,7 @@ class ResultsRetriever(BaseWorker):
                 self._mark_as_failed(task)
                 return
 
-            fmt = Formatter('/ect/nsm/rules/')
+            fmt = Formatter('/etc/nsm/rules/')
 
             reader = FileEventReader(log_file)
             events = []
@@ -265,7 +265,7 @@ class Formatter(object):
             elif key == "extra-data":
                 event['extra-data'] = []
                 for data in record[key]:
-                    event['extra-data'].append(self.format_event(data))
+                    event['extra-data'].append(self.format_extra_data(data))
             elif key == "packets":
                 event['packets'] = []
                 for data in record[key]:
