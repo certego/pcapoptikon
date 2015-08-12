@@ -1,3 +1,4 @@
+import base64
 import glob
 import logging
 import os
