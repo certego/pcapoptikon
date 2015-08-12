@@ -157,10 +157,12 @@ class ResultsRetriever(BaseWorker):
                 self._mark_as_failed(task)
                 return
 
+            fmt = Formatter('/ect/nsm/rules/')
+
             reader = FileEventReader(log_file)
             events = []
             for event in reader:
-                events.append(event)
+                events.append(fmt.format_event(event))
 
             task.results = json.dumps(events)
             self._mark_as_completed(task)
@@ -205,3 +207,120 @@ class TasksSubmitter(BaseWorker):
             log.error("Error running task {}: {}".format(task.id, json.dumps(res['message'])))
 
         sc.close()
+
+class Formatter(object):
+
+    def __init__(self, config_path):
+        self.classmap   = maps.ClassificationMap()
+        self.msgmap     = maps.SignatureMap()
+        self.load_from_config_path(config_path)
+
+    def load_from_config_path(self, config_path):
+
+        classification_config = os.path.join(config_path, "classification.config")
+        if os.path.exists(classification_config):
+            log.debug("Loading %s.", classification_config)
+            self.classmap.load_from_file(open(classification_config))
+
+        genmsg_map = os.path.join(config_path, "gen-msg.map")
+        if os.path.exists(genmsg_map):
+            log.debug("Loading %s.", genmsg_map)
+            self.msgmap.load_generator_map(open(genmsg_map))
+
+        sidmsg_map = os.path.join(config_path, "sid-msg.map")
+        if os.path.exists(sidmsg_map):
+            log.debug("Loading %s.", sidmsg_map)
+            self.msgmap.load_signature_map(open(sidmsg_map))
+
+    def resolve_msg(self, event, default=None):
+        if self.msgmap:
+            signature = self.msgmap.get(
+                event["generator-id"], event["signature-id"])
+            if signature:
+                return signature["msg"]
+        return default
+
+    def resolve_classification(self, event, default=None):
+        if self.classmap:
+            classinfo = self.classmap.get(event["classification-id"])
+            if classinfo:
+                return classinfo["description"]
+        return default
+
+    def format_event(self, record):
+        event = {}
+
+        msg = self.resolve_msg(record)
+        if msg:
+            event["msg"] = msg
+        classification = self.resolve_classification(record)
+        if classification:
+            event["classification"] = classification
+
+        for key in record:
+            if key.endswith(".raw"):
+                continue
+            elif key == "extra-data":
+                event['extra-data'] = []
+                for data in record[key]:
+                    event['extra-data'].append(self.format_event(data))
+            elif key == "packets":
+                event['packets'] = []
+                for data in record[key]:
+                    event['packets'].append(self.format_packet(data))
+            elif key == "appid" and not record["appid"]:
+                continue
+            else:
+                event[key] = record[key]
+        return {"event": event}
+
+    def format_packet(self, record):
+        packet = {}
+        for key in record:
+            if key == "data":
+                packet[key] = base64.b64encode(record[key])
+            else:
+                packet[key] = record[key]
+        return {"packet": packet}
+
+    def format_extra_data(self, record):
+        data = {}
+
+        # For data types that can be printed in plain text, extract
+        # the data into its own field with a descriptive name.
+        if record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_FILENAME"]:
+            data["smtp-filename"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_MAIL_FROM"]:
+            data["smtp-from"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_RCPT_TO"]:
+            data["smtp-rcpt-to"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_HEADERS"]:
+            data["smtp-headers"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["HTTP_URI"]:
+            data["http-uri"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["HTTP_HOSTNAME"]:
+            data["http-hostname"] = record["data"]
+        elif record["type"] == unified2.EXTRA_DATA_TYPE["NORMALIZED_JS"]:
+            data["javascript"] = record["data"]
+        else:
+            log.warning("Unknown extra-data record type: %s" % (
+                str(record["type"])))
+
+        for key in record:
+            if key == "data":
+                data[key] = base64.b64encode(record[key])
+            else:
+                data[key] = record[key]
+
+        return {"extra-data": data}
+
+    def format(self, record):
+        if isinstance(record, unified2.Event):
+            return self.format_event(record)
+        elif isinstance(record, unified2.Packet):
+            return self.format_packet(record)
+        elif isinstance(record, unified2.ExtraData):
+            return self.format_extra_data(record)
+        else:
+            log.warning("Unknown record type: %s: %s" % (
+                str(record.__class__), str(record)))
