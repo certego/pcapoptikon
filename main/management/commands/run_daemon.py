@@ -166,7 +166,7 @@ class ResultsRetriever(BaseWorker):
             for event in reader:
                 events.append(fmt.format_event(event))
 
-            task.results = json.dumps(events)
+            task.results = events
             self._mark_as_completed(task)
 
 class TasksSubmitter(BaseWorker):
