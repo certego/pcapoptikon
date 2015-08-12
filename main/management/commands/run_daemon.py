@@ -16,6 +16,7 @@ from idstools.unified2 import FileEventReader
 from idstools import maps
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 class Command(BaseCommand):
 
