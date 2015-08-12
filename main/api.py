@@ -1,11 +1,17 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie.fields import ListField
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication, SessionAuthentication, MultiAuthentication
 from pcapoptikon.authorization import CertegoDjangoAuthorization
 from pcapoptikon.fields import Base64FileField
 from main.models import *
 
+def is_post(bundle):
+    if bundle.request.method == 'post':
+        return True
+
 class TaskResource(ModelResource):
-    pcap_file = Base64FileField("pcap_file")
+    pcap_file   = Base64FileField("pcap_file", use_in=is_post)
+    results     = ListField(attribute='results')
 
     def obj_create(self, bundle, **kwargs):
         return super(TaskResource, self).obj_create(bundle, user=bundle.request.user)

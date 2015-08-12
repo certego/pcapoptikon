@@ -30,4 +30,4 @@ class Task(models.Model):
     user                    = models.ForeignKey(User)
     status                  = models.IntegerField('Task status', default=STATUS_NEW, null=False, blank=True, choices=STATUS_CHOICES)
     results_dir             = models.CharField('Temporary results dir', max_length=512, blank=True, null=True, default=None)
-    results                 = jsonfield.JSONField('Results', null=True, blank=True, default=None, load_kwargs={'object_pairs_hook': collections.OrderedDict})
+    results                 = jsonfield.JSONField('Results', null=True, blank=True, default=None)
