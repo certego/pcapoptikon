@@ -249,7 +249,7 @@ class Formatter(object):
                 return classinfo["description"]
         return default
 
-    def format_event(self, record):
+    def format_event(self, record, encapsulate=True):
         event = {}
 
         msg = self.resolve_msg(record)
@@ -265,27 +265,34 @@ class Formatter(object):
             elif key == "extra-data":
                 event['extra-data'] = []
                 for data in record[key]:
-                    event['extra-data'].append(self.format_extra_data(data))
+                    event['extra-data'].append(self.format_extra_data(data, False))
             elif key == "packets":
                 event['packets'] = []
                 for data in record[key]:
-                    event['packets'].append(self.format_packet(data))
+                    event['packets'].append(self.format_packet(data, False))
             elif key == "appid" and not record["appid"]:
                 continue
             else:
                 event[key] = record[key]
-        return {"event": event}
 
-    def format_packet(self, record):
+        if encapsulate:
+            return {"event": event}
+        else:
+            return event
+
+    def format_packet(self, record, encapsulate=True):
         packet = {}
         for key in record:
             if key == "data":
                 packet[key] = base64.b64encode(record[key])
             else:
                 packet[key] = record[key]
-        return {"packet": packet}
+        if encapsulate:
+            return {"packet": packet}
+        else:
+            return packet
 
-    def format_extra_data(self, record):
+    def format_extra_data(self, record, encapsulate=True):
         data = {}
 
         # For data types that can be printed in plain text, extract
@@ -314,7 +321,10 @@ class Formatter(object):
             else:
                 data[key] = record[key]
 
-        return {"extra-data": data}
+        if encapsulate:
+            return {"extra-data": data}
+        else:
+            return data
 
     def format(self, record):
         if isinstance(record, unified2.Event):
