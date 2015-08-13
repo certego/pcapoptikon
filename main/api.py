@@ -11,7 +11,7 @@ def is_post(bundle):
 
 class TaskResource(ModelResource):
     pcap_file   = Base64FileField("pcap_file", use_in=is_post)
-    results     = ListField(attribute='results')
+    results     = ListField(attribute='results', null=True, blank=True, default=None)
 
     def obj_create(self, bundle, **kwargs):
         return super(TaskResource, self).obj_create(bundle, user=bundle.request.user)
