@@ -164,7 +164,7 @@ class ResultsRetriever(BaseWorker):
             reader = FileEventReader(log_file)
             events = []
             for event in reader:
-                events.append(fmt.format_event(event))
+                events.append(fmt.format_event(event, encapsulate=False))
 
             task.results = events
             self._mark_as_completed(task)
@@ -236,15 +236,38 @@ class Formatter(object):
 
     def resolve_msg(self, event, default=None):
         if self.msgmap:
-            signature = self.msgmap.get(
-                event["generator-id"], event["signature-id"])
+            if "generator-id" in event:
+                generator_id = event['generator-id']
+            elif "generator_id" in event:
+                generator_id = event['generator_id']
+            else:
+                log.warning("Unable to get generator-id nor generator_id")
+                return default
+
+            if "signature-id" in event:
+                signature_id = event['signature-id']
+            elif "signature_id" in event:
+                signature_id = event['signature_id']
+            else:
+                log.warning("Unable to get signature-id nor signature_id")
+                return default
+
+            signature = self.msgmap.get(generator_id, signature_id)
             if signature:
                 return signature["msg"]
         return default
 
     def resolve_classification(self, event, default=None):
+        if "classification-id" in event:
+            classification_id = event['classification-id']
+        elif "classification_id" in event:
+            classification_id = event['classification_id']
+        else:
+            log.warning("Unable to get classification-id nor classification_id")
+            return default
+
         if self.classmap:
-            classinfo = self.classmap.get(event["classification-id"])
+            classinfo = self.classmap.get(classification_id)
             if classinfo:
                 return classinfo["description"]
         return default
@@ -263,9 +286,9 @@ class Formatter(object):
             if key.endswith(".raw"):
                 continue
             elif key == "extra-data":
-                event['extra-data'] = []
+                event['extra_data'] = []
                 for data in record[key]:
-                    event['extra-data'].append(self.format_extra_data(data, False))
+                    event['extra_data'].append(self.format_extra_data(data, False))
             elif key == "packets":
                 event['packets'] = []
                 for data in record[key]:
@@ -273,7 +296,7 @@ class Formatter(object):
             elif key == "appid" and not record["appid"]:
                 continue
             else:
-                event[key] = record[key]
+                event[key.replace('-', '_')] = record[key]
 
         if encapsulate:
             return {"event": event}
@@ -286,7 +309,7 @@ class Formatter(object):
             if key == "data":
                 packet[key] = base64.b64encode(record[key])
             else:
-                packet[key] = record[key]
+                packet[key.replace('-', '_')] = record[key]
         if encapsulate:
             return {"packet": packet}
         else:
@@ -298,17 +321,17 @@ class Formatter(object):
         # For data types that can be printed in plain text, extract
         # the data into its own field with a descriptive name.
         if record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_FILENAME"]:
-            data["smtp-filename"] = record["data"]
+            data["smtp_filename"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_MAIL_FROM"]:
-            data["smtp-from"] = record["data"]
+            data["smtp_from"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_RCPT_TO"]:
-            data["smtp-rcpt-to"] = record["data"]
+            data["smtp_rcpt_to"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["SMTP_HEADERS"]:
-            data["smtp-headers"] = record["data"]
+            data["smtp_headers"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["HTTP_URI"]:
-            data["http-uri"] = record["data"]
+            data["http_uri"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["HTTP_HOSTNAME"]:
-            data["http-hostname"] = record["data"]
+            data["http_hostname"] = record["data"]
         elif record["type"] == unified2.EXTRA_DATA_TYPE["NORMALIZED_JS"]:
             data["javascript"] = record["data"]
         else:
@@ -319,10 +342,10 @@ class Formatter(object):
             if key == "data":
                 data[key] = base64.b64encode(record[key])
             else:
-                data[key] = record[key]
+                data[key.replace('-', '_')] = record[key]
 
         if encapsulate:
-            return {"extra-data": data}
+            return {"extra_data": data}
         else:
             return data
 
