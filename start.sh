@@ -1,4 +1,7 @@
 #!/bin/bash
+cd /opt/pcapoptikon
+git pull origin master
+python manage.py migrate
 service mysql start
 /usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket >/dev/null 2>&1 &
 /usr/bin/python /opt/pcapoptikon/manage.py runserver 0.0.0.0:8000 >/var/log/pcapoptikon_web.log 2>&1 &
