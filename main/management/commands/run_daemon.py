@@ -159,7 +159,7 @@ class ResultsRetriever(BaseWorker):
                 self._mark_as_failed(task)
                 return
 
-            fmt = Formatter('/etc/nsm/rules/')
+            fmt = Formatter('/etc/suricata/rules/')
 
             reader = FileEventReader(log_file)
             events = []
