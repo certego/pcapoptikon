@@ -9,6 +9,7 @@ EXPOSE 8000
 
 RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install \
             cpanminus \
+            expect \
             git \
             libmysqlclient-dev \
             libssl-dev \
@@ -38,7 +39,8 @@ RUN git clone https://github.com/pdelsante/pcapoptikon.git /opt/pcapoptikon && \
 RUN service mysql start && \
         mysqladmin create pcapoptikon && \
         cd /opt/pcapoptikon/ && \
-        python manage.py migrate --noinput
+        python manage.py migrate --noinput && \
+        ./create_user.sh
         
 VOLUME ["/var/lib/mysql"]
 

@@ -22,6 +22,8 @@ oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 
 # Give a hint about how to use
 echo "Running on: http://"$(hostname -i)":8000/"
+echo "Username: admin"
+echo "Api-Key: "$(mysql -e 'SELECT `key` FROM tastypie_apikey WHERE user_id = (SELECT id FROM auth_user WHERE username = '"'"'admin'"'"');' pcapoptikon)
 
 # Run oinkmaster every 24 hours and send SIGUSR2 to Suricata to make it reload the rules
 while true; do
