@@ -5,6 +5,10 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from tastypie.models import create_api_key
+
+
+models.signals.post_save.connect(create_api_key, sender=User)
 
 # add_now() is used to create auto datetime fields with the correct timezone
 def add_now():
