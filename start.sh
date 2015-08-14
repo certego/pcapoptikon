@@ -27,7 +27,7 @@ echo "Api-Key: "$(mysql -e 'SELECT `key` FROM tastypie_apikey WHERE user_id = (S
 
 # Run oinkmaster every 24 hours and send SIGUSR2 to Suricata to make it reload the rules
 while true; do
-    sleep 60 * 60 * 24
+    sleep $(expr 60 \* 60 \* 24)
     oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
     killall -SIGUSR2 suricata
 done
