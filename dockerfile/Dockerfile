@@ -1,6 +1,7 @@
-# This is a Dockerfile for creating a Thug https://github.com/buffer/thug Container from the latest
+# This is a Dockerfile for creating a PcapOptikon Container from the latest
 # Ubuntu base image. This is known bo be working on Ubuntu 14.04. It should work on any later version
-# This is a full installation of Thug including all optional packages used for distributed operation
+# This is a full installation of PcapOptikon including all the dependencies and Suricata.
+# The container will run Oinkmaster every 24 hours to update the Emergint Threats Open ruleset.
 FROM ubuntu:14.04
 MAINTAINER p.delsante@certego.net
 ENV LC_ALL C
