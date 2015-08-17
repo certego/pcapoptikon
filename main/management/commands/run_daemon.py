@@ -148,7 +148,7 @@ class ResultsRetriever(BaseWorker):
             return
         else:
             try:
-                log_file_pattern = os.path.join(task.results_dir, 'snort.unified2.*')
+                log_file_pattern = os.path.join(task.results_dir, 'unified2.alert.*')
                 log_file = glob.glob(log_file_pattern)[0]
             except IndexError as err:
                 log.exception("[{}] Unable to find a log file in {}".format(task.id, log_file_pattern))
