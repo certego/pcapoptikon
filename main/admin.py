@@ -7,7 +7,7 @@ from .models import Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['pcap_file', 'submitted_on', 'user', 'status', 'results_dir']
+    list_display = ['id', 'pcap_file', 'submitted_on', 'user', 'status', 'results_dir']
     list_editable = ['user', 'status']
     list_filter = ['user', 'status']
     search_fields = ['pcap_file', 'results']
