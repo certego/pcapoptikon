@@ -16,8 +16,8 @@ class TaskAdmin(admin.ModelAdmin):
 class UserModelAdmin(UserAdmin):
     inlines = UserAdmin.inlines + [ApiKeyInline]
 
-admin.site.register(ApiKey)
+#admin.site.register(ApiKey)
 admin.site.register(ApiAccess)
 admin.site.unregister(User)
 admin.site.register(User,UserModelAdmin)
-admin.site.register(Task)
+admin.site.register(Task, TaskAdmin)
