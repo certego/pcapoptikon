@@ -12,6 +12,12 @@ cd /opt/pcapoptikon
 git pull origin master
 python manage.py migrate
 
+#https://rules.emergingthreats.net/<code>/suricata/etpro.rules.tar.gz
+
+if [ $(echo $1 | egrep '^[0-9]{16}$' | wc -l) -eq 1 ]; then
+    sed -ir "s|^url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz|url = https://rules.emergingthreats.net/$1/suricata/etpro.rules.tar.gz|"
+fi
+
 # Update suricata rules
 oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 
