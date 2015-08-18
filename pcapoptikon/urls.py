@@ -11,11 +11,14 @@ v1_api = Api(api_name='v1')
 v1_api.register(TaskResource())
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'pcapoptikon.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
+    # Admin views
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name="login"),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login', name="logout"),
+
+    # APIs
     url(r'^api/', include(v1_api.urls)),
+
+    # Other views
     url(r'', include('main.urls', namespace="main")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
