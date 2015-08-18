@@ -108,6 +108,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = '/var/tmp/django'
 MEDIA_URL = '/files/'
 
+# Templates
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
