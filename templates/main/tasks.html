@@ -64,14 +64,17 @@ var table = $('#table_tasks').DataTable({
                     
                     // Status to badge
                     switch (this.status){
+                        case -1:
+                            this.status = '<span id="span_status" class="label label-danger">Failed</span>';
+                            break;
                         case 0:
-                            this.status = '<span id="span_status" class="label label-info">Queued</span>';
+                            this.status = '<span id="span_status" class="label label-info">New</span>';
                             break;
                         case 1:
-                            this.status = '<span id="span_status" class="label label-primary">Running</span>';
+                            this.status = '<span id="span_status" class="label label-primary">Processing</span>';
                             break;
                         case 2:
-                            this.status = '<span id="span_status" class="label label-danger">Failed</span>';
+                            this.status = '<span id="span_status" class="label label-primary">Queued</span>';
                             break;
                         case 3:
                             this.status = '<span id="span_status" class="label label-success">Completed</span>';
