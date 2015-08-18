@@ -23,12 +23,11 @@ def tasks(request, status='any', pagination_start=0, pagination_len=50):
 def new_task(request):
     context = {
         'active_tab':   'new_task',
-        'form':         TaskForm(request.POST or None),
+        'form':         TaskForm(request.POST or None, request.FILES),
     }
 
     if request.method == 'POST':
         if context['form'].is_valid():
-
             saved_task = context['form'].save()
 
             return HttpResponseRedirect(
