@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from .main.models import *
-from .main.forms import *
+from main.models import *
+from main.forms import *
 
 @login_required
 def tasks(request, status='any', pagination_start=0, pagination_len=50):
