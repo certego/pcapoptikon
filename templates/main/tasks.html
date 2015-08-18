@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Tasks list{% endblock %}
+{% block navbar %}{% include 'navbar.html' %}{% endblock %} 
+{% block content %}
+    <table class="table table-hover table-striped table-bordered" id="table_tasks">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>File</td>
+                <td>Submitted on</td>
+                <td>Owner</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr onclick="window.document.location='{% url 'main:task' task.id %}';" style="cursor:pointer;">
+                <td>{{ task.id }}</td>
+                <td>{{ task.pcap_file.name }}</td>
+                <td>{{ task.submitted_on }}</td>
+                <td>{{ task.user.username }}</td>
+                <td>{{ task.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block bottomscripts %}
+$(document).ready(function() {
+    $('#table_tasks').DataTable( {
+        "dom": 'T<"clear">lfrtip',
+        "pageLength": 50,
+        "tableTools": {
+            "aButtons":     []
+        }
+    } );
+} );
+{% endblock %}
+{% block customcss %}
+    div.DTTT {
+        margin-bottom: 0.5em;
+        float: right;
+    }
+    div.dataTables_wrapper {
+        clear: both;
+    }
+    .progress {
+        height: 7px;
+        margin-bottom: 2px;
+    }
+{% endblock %}

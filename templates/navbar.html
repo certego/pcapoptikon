@@ -1,0 +1,14 @@
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentaion" {% if active_tab == 'tasks' %} class="active"{% endif %}>
+        <a href="{% if active_tab == 'tasks' %}#{% else %}{% url 'main:tasks' %}{% endif %}">
+            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+            Tasks
+        </a>
+      </li>
+      <li role="presentaion" {% if active_tab == 'new_task' %} class="active"{% endif %}>
+        <a href="{% if active_tab == 'new_task' %}#{% else %}{% url 'main:new_task' %}{% endif %}">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            Tasks
+        </a>
+      </li>
+    </ul>

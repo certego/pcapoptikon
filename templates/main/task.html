@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load certego_tags %}
+{% block title %}Task results{% endblock %}
+{% block navbar %}{% include 'navbar.html' %}{% endblock %} 
+{% block content %}
+<section id="signatures">
+    {% if task.results %}
+        {% for event in task.results %}
+            <a style="text-decoration: none;" href="#event_{{event.event_id}}" data-toggle="collapse">
+            {% if event.priority >= 3 %}
+                <div class="alert alert-info signature">
+            {% elif event.priority == 2 %}
+                <div class="alert alert-warning signature">
+            {% elif event.priority <= 1 %}
+                <div class="alert alert-danger signature">
+            {% endif %}
+            [{{event.generator_id}}:{{event.signature_id}}:{{event.signature_revision}}] {{event.msg}} [Classification: {{event.classification}}] [Priority: {{event.priority}}]</div></a>
+            <div id="event_{{event.event_id}}" class="collapse">
+                <table class="table table-bordered" style="table-layout: fixed;">
+                    <tbody>
+                        <tr>
+                            <td style="width:100px;">Protocol:</td>
+                            <td>{{event.protocol}}</td>
+                        </tr>
+                        <tr>
+                            <td>Source:</td>
+                            <td>{{event.source_ip}}:{{event.sport_itype}}</td>
+                        </tr>
+                        <tr>
+                            <td>Destination:</td>
+                            <td>{{event.destination_ip}}:{{event.dport_icode}}</td>
+                        </tr>
+                        {% for packet in event.packets %}
+                        <tr>
+                            <td>Packet #{{forloop.counter}}</td>
+                            <td><pre>{{packet.data|b64decode_hexdump}}</pre></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No signatures</p>
+    {% endif %}
+</section>
+{% endblock %}
+{% block bottomscripts %}
+{% endblock %}
+{% block customcss %}
+{% endblock %}

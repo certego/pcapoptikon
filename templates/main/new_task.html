@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}New task{% endblock %}
+{% block navbar %}{% include 'navbar.html' %}{% endblock %}
+{% block content %}
+    <form id="form_task" name="task" method="post" role="form">
+        {% csrf_token %}
+        {% for key, error in form.errors.items %}
+        <div class="alert alert-danger" role="alert">Error in field &quot;{{ key|escape }}&quot;: {{ error|escape }}</div>
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+        {% endfor %}
+        <div class="panel panel-default" id="panel_general_settings">
+            <div class="panel-heading">
+                <h3 class="panel-title">New task</h3>
+            </div>
+            <div class="panel-body">
+                {% for error in form.pcap_file.errors %}
+                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                {% endfor %}
+                <div class="form-group">
+                    {{ form.pcap_file.label_tag }}
+                    {% render_field form.pcap_file class+="form-control" %}
+                </div>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-info" value="Submit">
+    </form>
+{% endblock %}
+{% block bottomscripts %}
+{% endblock %}
+{% block customcss %}
+{% endblock %}
