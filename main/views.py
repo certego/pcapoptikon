@@ -11,7 +11,7 @@ def tasks(request, status='any', pagination_start=0, pagination_len=50):
 
     context = {
         'active_tab':   'tasks',
-        'tasks_list':   Task.objects.all().order_by('-id')[pagination_start:pagination_start+pagination_len],
+        'tasks':        Task.objects.all().order_by('-id')[pagination_start:pagination_start+pagination_len],
         'total':        Task.objects.all().count(),
         'start':        pagination_start,
         'len':          pagination_len,
