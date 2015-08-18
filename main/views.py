@@ -6,16 +6,9 @@ from main.models import *
 from main.forms import *
 
 @login_required
-def tasks(request, status='any', pagination_start=0, pagination_len=50):
-    pagination_start    = int(pagination_start)
-    pagination_len      = int(pagination_len)
-
+def tasks(request):
     context = {
         'active_tab':   'tasks',
-        'tasks':        Task.objects.all().order_by('-id')[pagination_start:pagination_start+pagination_len],
-        'total':        Task.objects.all().count(),
-        'start':        pagination_start,
-        'len':          pagination_len,
     }
 
     return render(request, 'main/tasks.html', context)
