@@ -64,6 +64,11 @@ class BaseWorker(threading.Thread):
     def _fetch_queued_tasks(self):
         return Task.objects.filter(status__exact=Task.STATUS_QUEUED).order_by('submitted_on')
 
+    def _reset_processing(self):
+        log.debug("Resetting all processing tasks, marking them as new")
+        updated = Task.objects.filter(status__exact=Task.STATUS_PROCESSING).update(status=Task.STATUS_NEW)
+        log.debug("{} tasks reset to new".format(updated))
+
     def _mark_as_new(self, task):
         log.debug("[{}] Marking task as new".format(task.id))
         task.status = Task.STATUS_NEW
@@ -172,6 +177,7 @@ class ResultsRetriever(BaseWorker):
 class TasksSubmitter(BaseWorker):
     def __init__(self, socket_path, group=None, target=None, name=None, args=(), kwargs={}):
         log.info("Initializing new TasksSubmitter thread")
+        self._reset_processing()
         super(TasksSubmitter, self).__init__(socket_path, group=group, target=target, name="TasksSubmitter", args=args, kwargs=kwargs)
 
     def run(self):
