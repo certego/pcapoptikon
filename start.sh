@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Send all output (stdout + stderr) to a log file
+exec > >(tee /var/log/pcapoptikon_startup.log)
+exec 2>&1
+
 # Start MySQL server
 service mysql start
 
