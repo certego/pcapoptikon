@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from main.models import *
 from main.forms import *
 
@@ -34,10 +35,7 @@ def new_task(request):
             context['form'].save_m2m()
 
             return HttpResponseRedirect(
-                reverse(
-                    'main:tasks',
-                    kwargs={'task_id': saved_task.id}
-                )
+                reverse('main:tasks')
             )
 
     return render(request, 'main/new_task.html', context)
