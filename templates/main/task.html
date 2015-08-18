@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% load certego_tags %}
 {% block title %}Task results{% endblock %}
-{% block navbar %}{% include 'navbar.html' %}{% endblock %} 
+{% block navbar %}{% include 'navbar.html' %}{% endblock %}
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'main:tasks'%}">Tasks</a></li>
+        <li class="active">
+            Task #{{task.id}}
+        </li>
+    </ol>
+{% endblock %}
 {% block content %}
 <section id="signatures">
     {% if task.results %}
