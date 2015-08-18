@@ -17,4 +17,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(v1_api.urls)),
+    url(r'', include('main.urls', namespace="main")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
