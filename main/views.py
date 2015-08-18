@@ -24,10 +24,10 @@ def tasks(request, status='any', pagination_start=0, pagination_len=50):
 def new_task(request):
     context = {
         'active_tab':   'new_task',
-        'form':         TaskForm(request.POST or None, request.FILES),
     }
 
     if request.method == 'POST':
+        context['form'] = TaskForm(request.POST or None, request.FILES)
         if context['form'].is_valid():
             saved_task = context['form'].save(commit=False)
             saved_task.user = request.user
@@ -37,6 +37,8 @@ def new_task(request):
             return HttpResponseRedirect(
                 reverse('main:tasks')
             )
+    else:
+        context['form'] = TaskForm(None)
 
     return render(request, 'main/new_task.html', context)
 
