@@ -11,10 +11,10 @@ def tasks(request, status='any', pagination_start=0, pagination_len=50):
 
     context = {
         'active_tab':   'tasks',
-        'tasks_list':   Task.objects.all().order_by('-id')[pagination_start:pagination_start+pagination_len]
-        'total':        Task.objects.all().count()
+        'tasks_list':   Task.objects.all().order_by('-id')[pagination_start:pagination_start+pagination_len],
+        'total':        Task.objects.all().count(),
         'start':        pagination_start,
-        'len':          pagination_len
+        'len':          pagination_len,
     }
 
     return render(request, 'main/tasks.html', context)
@@ -23,7 +23,7 @@ def tasks(request, status='any', pagination_start=0, pagination_len=50):
 def new_task(request):
     context = {
         'active_tab':   'new_task',
-        'form':         TaskForm(request.POST or None)
+        'form':         TaskForm(request.POST or None),
     }
 
     if request.method == 'POST':
@@ -44,7 +44,7 @@ def new_task(request):
 def task(request, task_id):
     context = {
         'active_tab':   'tasks',
-        'task':         get_object_or_404(Task, pk=task_id)
+        'task':         get_object_or_404(Task, pk=task_id),
     }
 
     return render(request, 'main/task.html', context)
