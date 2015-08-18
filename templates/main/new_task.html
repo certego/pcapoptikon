@@ -3,7 +3,7 @@
 {% block title %}New task{% endblock %}
 {% block navbar %}{% include 'navbar.html' %}{% endblock %}
 {% block content %}
-    <form id="form_task" name="task" method="post" role="form">
+    <form id="form_task" name="task" enctype="multipart/form-data" method="post" role="form">
         {% csrf_token %}
         {% for key, error in form.errors.items %}
         <div class="alert alert-danger" role="alert">Error in field &quot;{{ key|escape }}&quot;: {{ error|escape }}</div>
