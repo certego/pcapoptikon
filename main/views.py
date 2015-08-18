@@ -28,7 +28,10 @@ def new_task(request):
 
     if request.method == 'POST':
         if context['form'].is_valid():
-            saved_task = context['form'].save()
+            saved_task = context['form'].save(commit=False)
+            saved_task.user = request.user
+            saved_task.save()
+            context['form'].save_m2m()
 
             return HttpResponseRedirect(
                 reverse(
