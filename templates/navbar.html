@@ -8,7 +8,7 @@
       <li role="presentaion" {% if active_tab == 'new_task' %} class="active"{% endif %}>
         <a href="{% if active_tab == 'new_task' %}#{% else %}{% url 'main:new_task' %}{% endif %}">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            Tasks
+            New task
         </a>
       </li>
     </ul>
