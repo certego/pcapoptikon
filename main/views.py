@@ -43,7 +43,7 @@ def new_task(request):
     return render(request, 'main/new_task.html', context)
 
 @login_required
-def task(request, task_id):
+def task(request, task_id=None):
     context = {
         'active_tab':   'tasks',
         'task':         get_object_or_404(Task, pk=task_id),

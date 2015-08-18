@@ -27,3 +27,4 @@ class TaskResource(ModelResource):
             'user': ALL,
             'status': ALL,
         }
+        ordering = ['id', 'submitted_on', 'user', 'status']
