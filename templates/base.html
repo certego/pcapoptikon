@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,9 @@
 <title>PCAPOptikon: {% block title %}{% endblock %}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% block customheaders %}{% endblock %}
-<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-<link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-<link href="/static/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="{% static 'css/bootstrap.min.css" rel="stylesheet' %}">
+<link href="{% static 'css/bootstrap-datetimepicker.min.css" rel="stylesheet' %}">
+<link href="{% static 'css/dataTables.bootstrap.min.css" rel="stylesheet' %}">
 <style>
 body {
     margin-top: 20px;
@@ -59,14 +60,14 @@ img.fade:hover {
         </footer>
     </div>
     
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/jquery-ui.min.js"></script>
-    <script src="/static/js/moment.min.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
-    <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/static/js/dataTables.min.js"></script>
-    <script src="/static/js/dataTables.tableTools.min.js"></script>
-    <script src="/static/js/dataTables.bootstrap.min.js"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.tableTools.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
 
     <script>
     {% block bottomscripts %}{% endblock %}
