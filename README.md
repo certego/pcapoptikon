@@ -130,9 +130,10 @@ To view the status of task #1: http://127.0.0.1:8000/api/v1/task/1/?format=json
 
 Making a POST request to http://127.0.0.1:8000/api/v1/task/ will create a new task for you. Please note that the PCAP file you're sending will need to be encoded with base64. An example Python script making a POST request to create a new task is the following:
 
-    import requests
-    import os
+    import base64
     import json
+    import os
+    import requests
     
     
     api_url     = "http://127.0.0.1:8000/api/v1/"
