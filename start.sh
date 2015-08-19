@@ -16,7 +16,7 @@ python manage.py migrate
 
 if [ $(echo $1 | egrep '^[0-9]{16}$' | wc -l) -eq 1 ]; then
     echo "Using supplied OinkCode to set up ETPro ruleset in oinkmaster"
-    sed -ir "s|^url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz|url = https://rules.emergingthreats.net/$1/suricata/etpro.rules.tar.gz|"
+    sed -ir "s|^url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz|url = https://rules.emergingthreats.net/$1/suricata/etpro.rules.tar.gz|" /etc/oinkmaster.conf
 else
     echo "Using default ET Open ruleset (to change this, please pass your ETPro oinkcode as the first param to $0"
 fi
