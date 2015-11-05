@@ -45,7 +45,7 @@ fi
 oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 
 # Start Suricata
-/usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket >/dev/null 2>&1 &
+/usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket --pidfile /var/run/suricata.pid >/dev/null 2>&1 &
 
 # Start the pcapoptikon HTTP server
 /usr/bin/python /opt/pcapoptikon/manage.py runserver 0.0.0.0:8000 >/var/log/pcapoptikon_web.log 2>&1 &
@@ -62,5 +62,5 @@ echo "Api-Key: "$(mysql -e 'SELECT `key` FROM tastypie_apikey WHERE user_id = (S
 while true; do
     sleep $(expr 60 \* 60 \* 24)
     oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
-    killall -SIGUSR2 suricata
+    kill -SIGUSR2 $(cat /var/run/suricata.pid)
 done
