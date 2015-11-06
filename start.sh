@@ -25,9 +25,11 @@ exec > >(tee /var/log/pcapoptikon_startup.log)
 exec 2>&1
 
 # Start MySQL server
+echo "Starting MySQL..."
 service mysql start
 
 # Ensure you got the latest pcapoptikon version
+echo "Pulling PCAPOptikon repo..."
 cd /opt/pcapoptikon
 git pull origin master
 python manage.py migrate
@@ -42,15 +44,20 @@ else
 fi
 
 # Update suricata rules
+echo "Running OinkMaster to update signatures..."
 oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 
 # Start Suricata
+echo "Starting Suricata..."
+rm -f /var/run/suricata.pid
 /usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket --pidfile /var/run/suricata.pid >/dev/null 2>&1 &
 
 # Start the pcapoptikon HTTP server
+echo "Starting the PCAPOptikon HTTP Server..."
 /usr/bin/python /opt/pcapoptikon/manage.py runserver 0.0.0.0:8000 >/var/log/pcapoptikon_web.log 2>&1 &
 
 # Start the pcapoptikon daemon
+echo "Starting the PCAPOptikon worker daemon..."
 /usr/bin/python /opt/pcapoptikon/manage.py run_daemon >/var/log/pcapoptikon_daemon.log 2>&1 &
 
 # Give a hint about how to use
