@@ -165,8 +165,17 @@ class ResultsRetriever(BaseWorker):
         sc = SuricataSC(self.SOCKET_PATH)
         sc = self._connect(sc)
 
-        res = sc.send_command('pcap-file-list', None)
-        sc.close()
+        try:
+            res = sc.send_command('pcap-file-list', None)
+        except Exception as e:
+            log.error("Got exception while trying to retrieve file list from suricata socket")
+            return
+
+        try:
+            sc.close()
+        except:
+            pass
+
         log.debug("Command 'pcap-file-list' returned: {}".format(res))
 
         if task.pcap_file.name in res['message']['files']:
@@ -226,7 +235,13 @@ class TasksSubmitter(BaseWorker):
         file_path = os.path.join(settings.MEDIA_ROOT, task.pcap_file.name)
         output_dir = tempfile.mkdtemp()
 
-        res = sc.send_command('pcap-file', {'filename': file_path, 'output-dir': output_dir})
+        try:
+            res = sc.send_command('pcap-file', {'filename': file_path, 'output-dir': output_dir})
+        except Exception as e:
+            log.error("Got exception while trying to send file to suricata socket")
+            # Make sure we'll try again later
+            self._mark_as_new(task)
+            return
 
         if res['return'] == 'OK':
             task.results_dir = output_dir
@@ -235,7 +250,10 @@ class TasksSubmitter(BaseWorker):
             self._mark_as_failed(task)
             log.error("Error running task {}: {}".format(task.id, json.dumps(res['message'])))
 
-        sc.close()
+        try:
+            sc.close()
+        except:
+            pass
 
 class Formatter(object):
 
