@@ -55,19 +55,29 @@ rm -f /var/run/suricata.pid
 # Start the pcapoptikon HTTP server
 echo "Starting the PCAPOptikon HTTP Server..."
 /usr/bin/python /opt/pcapoptikon/manage.py runserver 0.0.0.0:8000 >/var/log/pcapoptikon_web.log 2>&1 &
+echo $! > /var/run/pcapoptikon-http.pid
 
 # Start the pcapoptikon daemon
 echo "Starting the PCAPOptikon worker daemon..."
 /usr/bin/python /opt/pcapoptikon/manage.py run_daemon >/var/log/pcapoptikon_daemon.log 2>&1 &
+echo $! > /var/run/pcapoptikon-daemon.pid
 
 # Give a hint about how to use
 echo "Running on: http://"$(hostname -i)":8000/"
 echo "Username: admin"
 echo "Api-Key: "$(mysql -e 'SELECT `key` FROM tastypie_apikey WHERE user_id = (SELECT id FROM auth_user WHERE username = '"'"'admin'"'"');' pcapoptikon)
 
-# Run oinkmaster every 24 hours and send SIGUSR2 to Suricata to make it reload the rules
+# Run oinkmaster every 24 hours and restart suricata and pcapoptikon daemon to reload the rules
 while true; do
     sleep $(expr 60 \* 60 \* 24)
     oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
-    kill -SIGUSR2 $(cat /var/run/suricata.pid)
+    kill $(cat /var/run/pcapoptikon-daemon.pid)
+    sleep 5
+    rm -f /var/run/pcapoptikon-daemon.pid
+    kill $(cat /var/run/suricata.pid)
+    sleep 5
+    rm -f /var/run/suricata.pid
+    /usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket --pidfile /var/run/suricata.pid >/dev/null 2>&1 &
+    /usr/bin/python /opt/pcapoptikon/manage.py run_daemon >/var/log/pcapoptikon_daemon.log 2>&1 &
+    echo $! > /var/run/pcapoptikon-daemon.pid
 done
