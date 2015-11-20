@@ -85,7 +85,12 @@ var table = $('#table_tasks').DataTable({
                     }
 
                     // Hits count
-                    this.hits = this.results.lengt;
+                    if (this.results){
+                        this.hits = this.results.lengt;
+                    }
+                    else {
+                        this.hits = 0;
+                    }
                 });
             },
             dataType: 'json'
