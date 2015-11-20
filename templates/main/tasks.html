@@ -86,10 +86,10 @@ var table = $('#table_tasks').DataTable({
 
                     // Hits count
                     if (this.results){
-                        this.hits = this.results.lengt;
+                        this.results = this.results.lengt;
                     }
                     else {
-                        this.hits = 0;
+                        this.results = 0;
                     }
                 });
             },
@@ -104,7 +104,7 @@ var table = $('#table_tasks').DataTable({
         { "data": "submitted_on" },
         { "data": "user.username" },
         { "data": "status" },
-        { "data": "hits" }
+        { "data": "results" }
     ]
 });
 {% endblock %}
