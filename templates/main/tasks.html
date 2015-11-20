@@ -42,9 +42,6 @@ var table = $('#table_tasks').DataTable({
         if (data.order.length > 0){
             var direction = (data.order[0]['dir'] == 'desc' ? '-' : '');
             var column_name = data.columns[data.order[0]['column']]['data'];
-            if (column_name == 'shared_with'){
-                column_name = 'sharing_groups';
-            }
             data.order_by = direction + column_name;
         }
 
@@ -85,8 +82,8 @@ var table = $('#table_tasks').DataTable({
                     }
 
                     // Hits count
-                    if (this.results){
-                        this.results = this.results.lengt;
+                    if (this.results == null){
+                        this.results = this.results.length;
                     }
                     else {
                         this.results = 0;
