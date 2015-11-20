@@ -10,6 +10,7 @@
                 <td>Submitted on</td>
                 <td>Owner</td>
                 <td>Status</td>
+                <td>Hits</td>
             </tr>
         </thead>
         <tbody>
@@ -82,6 +83,9 @@ var table = $('#table_tasks').DataTable({
                         default:
                             this.status = '<span id="span_status" class="label label-default">Unknown</span>';
                     }
+
+                    // Hits count
+                    this.hits = this.results.lengt;
                 });
             },
             dataType: 'json'
@@ -95,6 +99,7 @@ var table = $('#table_tasks').DataTable({
         { "data": "submitted_on" },
         { "data": "user.username" },
         { "data": "status" }
+        { "data": "hits" }
     ]
 });
 {% endblock %}
