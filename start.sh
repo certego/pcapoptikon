@@ -34,8 +34,12 @@ cd /opt/pcapoptikon
 git pull origin master
 python manage.py migrate
 
-#https://rules.emergingthreats.net/<code>/suricata/etpro.rules.tar.gz
+# Adding local.rules to suricata.yaml if it's not there already
+touch /etc/suricata/rules/local.rules
+[ $(grep "local.rules" /etc/suricata/suricata.yaml | wc -l) -eq 0 ] && sed -i '/tor.rules/ a\
+ - local.rules' /etc/suricata/suricata.yaml
 
+# ETPro format: https://rules.emergingthreats.net/<code>/suricata/etpro.rules.tar.gz
 if [ $(echo $1 | egrep '^[0-9]{16}$' | wc -l) -eq 1 ]; then
     echo "Using supplied OinkCode to set up ETPro ruleset in oinkmaster"
     sed -ir "s|^url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz|url = https://rules.emergingthreats.net/$1/suricata/etpro.rules.tar.gz|" /etc/oinkmaster.conf
