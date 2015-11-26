@@ -54,7 +54,7 @@ oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 # Start Suricata
 echo "Starting Suricata..."
 rm -f /var/run/suricata.pid
-/usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket --pidfile /var/run/suricata.pid >/dev/null 2>&1 &
+/usr/bin/suricata -c /etc/suricata/suricata.yaml --unix-socket --pidfile /var/run/suricata.pid >/var/log/suricata/suricata.log 2>&1 &
 
 # Start the pcapoptikon HTTP server
 echo "Starting the PCAPOptikon HTTP Server..."
