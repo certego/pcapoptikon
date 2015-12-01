@@ -51,6 +51,10 @@ fi
 echo "Running OinkMaster to update signatures..."
 oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules
 
+# Update sid-msg.map
+echo "Updating sid-msg.map"
+/usr/share/oinkmaster/create-sidmap.pl /etc/suricata/rules > /etc/suricata/rules/sid-msg.map
+
 # Start Suricata
 echo "Starting Suricata..."
 rm -f /var/run/suricata.pid
