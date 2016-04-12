@@ -27,9 +27,9 @@ Default username and password are `admin:admin`. You will find some useful info 
 
 Should you own a valid ETPro oinkcode, you can supply it to the startup script that way:
 
-    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 pdelsante/pcapoptikon /opt/pcapoptikon/startup.sh <your_oinkcode_here>
+    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 pdelsante/pcapoptikon /opt/pcapoptikon/start.sh <your_oinkcode_here>
 
-Please note that, in this last case, you have to specify the docker instance's entry point `/opt/pcapoptikon/startup.sh` yourself.
+Please note that, in this last case, you have to specify the docker instance's entry point `/opt/pcapoptikon/start.sh` yourself.
 
 ## Manual Install
 
