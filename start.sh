@@ -26,6 +26,8 @@ exec 2>&1
 
 # Make sure that /var/log/mysql exists, else mysql start will fail
 mkdir -p /var/log/mysql
+# Also make sure that /var/log/suricata exists
+mkdir -p /var/log/suricata
 
 # Start MySQL server
 echo "Starting MySQL..."
