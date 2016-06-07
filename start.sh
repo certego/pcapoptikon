@@ -24,6 +24,9 @@
 exec > >(tee /var/log/pcapoptikon_startup.log)
 exec 2>&1
 
+# Make sure that /var/log/mysql exists, else mysql start will fail
+mkdir -p /var/log/mysql
+
 # Start MySQL server
 echo "Starting MySQL..."
 service mysql start
