@@ -26,8 +26,9 @@ exec 2>&1
 
 # Make sure that /var/log/mysql exists, else mysql start will fail
 mkdir -p /var/log/mysql
-# Also make sure that /var/log/suricata exists
+# Also make sure that /var/log/suricata and /var/run/suricata exist
 mkdir -p /var/log/suricata
+mkdir -p /var/run/suricata
 
 # Start MySQL server
 echo "Starting MySQL..."
@@ -38,6 +39,9 @@ echo "Pulling PCAPOptikon repo..."
 cd /opt/pcapoptikon
 git pull origin master
 python manage.py migrate
+
+# Making sure that unified2-alert format is enabled in suricata.yaml
+sed -i '/- unified2-alert:/{n;s/enabled: no/enabled: yes/}' /etc/suricata/suricata.yaml
 
 # Adding local.rules to suricata.yaml if it's not there already
 touch /etc/suricata/rules/local.rules
