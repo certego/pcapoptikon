@@ -31,6 +31,19 @@ Should you own a valid ETPro oinkcode, you can supply it to the startup script t
 
 Please note that, in this last case, you have to specify the docker instance's entry point `/opt/pcapoptikon/start.sh` yourself.
 
+### Working with local.rules
+PCAPOptikon can be very useful when testing your own rules. You can do so by modifying the local.rules file. In this case, I suggest that you mount the whole rules folder as a volume on your local disk, so that you can easily modify them with your favourite editor. As an example:
+
+    $ docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -v=/var/tmp/suricata/rules:/etc/suricata/rules -p=8000:8000 pdelsante/pcapoptikon
+
+This would mount PCAPOptikon's rules dir on your local `/var/tmp/suricata/rules` dir (please make sure it exists).
+
+To reload the newly modified rules, you can simply restart the whole docker container, but this will also run oinkmaster and download the whole ruleset from scratch. A quicker way is to use the included `reload.sh` script, that will manage all the necessary daemons for you:
+
+    $ docker exec -ti pcapoptikon /opt/pcapoptikon/reload.sh
+
+This script has its own log file inside the container: `/var/log/pcapoptikon_reload.log`.
+
 ## Manual Install
 
 ### System-wide requirements
