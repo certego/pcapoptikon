@@ -93,11 +93,19 @@ if __name__ == '__main__':
 
     print(
         "{msg}: {new} new, {queued} queued and {processing} processing | "
-        "new={new} queued={queued} processing={processing}".format(
+        "new={new};{wnew};{cnew};; "
+        "queued={queued};{wqueued};{cqueued};; "
+        "processing={processing};{wprocessing};{cprocessing};;".format(
             msg=ret_msg,
             new=new,
+            wnew=warn_thresholds[0],
+            cnew=crit_thresholds[0],
             queued=queued,
+            wqueued=warn_thresholds[1],
+            cqueued=crit_thresholds[1],
             processing=processing,
+            wprocessing=warn_thresholds[2],
+            cprocessing=crit_thresholds[2],
         )
     )
     sys.exit(ret)
