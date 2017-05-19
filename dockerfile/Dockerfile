@@ -32,6 +32,8 @@ url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz' /etc
 RUN sed -ir 's|^classification-file: /etc/suricata/classification.config$|classification-file: /etc/suricata/rules/classification.config|' /etc/suricata/suricata.yaml
 RUN sed -ir 's|^reference-file: /etc/suricata/reference.config$|reference-file: /etc/suricata/rules/reference.config|' /etc/suricata/suricata.yaml
 RUN sed -ir 's|#- rule-reload: true|- rule-reload: true|' /etc/suricata/suricata.yaml
+RUN sed -ir 's|^  checksum-valdation: yes|  checksum-valdation: no|' /etc/suricata/suricata.yaml
+RUN sed -ir 's|^  checksum-checks: auto|  checksum-checks: no|' /etc/suricata/suricata.yaml
 RUN touch /etc/suricata/threshold.config
         
 RUN git clone https://github.com/pdelsante/pcapoptikon.git /opt/pcapoptikon && \
