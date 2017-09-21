@@ -56,6 +56,7 @@ touch /etc/suricata/rules/local.rules
 if [ $(log $1 | egrep '^[0-9]{16}$' | wc -l) -eq 1 ]; then
     log "Using supplied OinkCode to set up ETPro ruleset in oinkmaster"
     sed -ir "s|^url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz|url = https://rules.emergingthreats.net/$1/suricata/etpro.rules.tar.gz|" /etc/oinkmaster.conf
+    sed -i 's/emerging-\(.*\)\.rules/\1.rules/g' /etc/suricata/suricata.yaml # ETPro rule files have a different name
 else
     log "Using default ET Open ruleset (to change this, please pass your ETPro oinkcode as the first param to $0"
 fi
