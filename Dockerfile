@@ -35,10 +35,13 @@ RUN sed -ir 's|#- rule-reload: true|- rule-reload: true|' /etc/suricata/suricata
 RUN sed -ir 's|^  checksum-valdation: yes|  checksum-valdation: no|' /etc/suricata/suricata.yaml
 RUN sed -ir 's|^  checksum-checks: auto|  checksum-checks: no|' /etc/suricata/suricata.yaml
 RUN touch /etc/suricata/threshold.config
+RUN mkdir -p /opt/pcapoptikon
         
-RUN git clone https://github.com/pdelsante/pcapoptikon.git /opt/pcapoptikon && \
-        pip install -r /opt/pcapoptikon/requirements.txt
+ADD requirements.txt /opt/pcapoptikon/requirements.txt
+RUN pip install -r /opt/pcapoptikon/requirements.txt
         
+ADD . /opt/pcapoptikon
+
 RUN service mysql start && \
         mysqladmin create pcapoptikon && \
         cd /opt/pcapoptikon/ && \

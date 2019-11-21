@@ -19,12 +19,12 @@
 # Author:   Pietro Delsante <p.delsante@certego.net>
 #           www.certego.net
 #
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from main import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^task/((?P<task_id>\d+)/)?$', views.task, name='task'),
     url(r'^new_task/$', views.new_task, name='new_task'),
     url(r'^$', views.tasks, name='tasks'),
-)
+]
