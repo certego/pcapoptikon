@@ -6,11 +6,11 @@ PCAPOptikon uses Django 1.8 and TastyPie.
 ## Docker image
 Docker is surely the quickest way to get started with PCAPOptikon. You can download it by running:
 
-    $ sudo docker pull pdelsante/pcapoptikon
+    $ sudo docker pull certego/pcapoptikon
 
-Now, I would suggest you to create a _data-only_ docker container to grant the persistence of MySQL data (`pdelsante/pcapoptikon` exposes the volume `/var/lib/mysql`):
+Now, I would suggest you to create a _data-only_ docker container to grant the persistence of MySQL data (`certego/pcapoptikon` exposes the volume `/var/lib/mysql`):
 
-    $ sudo docker create --name pcapoptikon_data pdelsante/pcapoptikon
+    $ sudo docker create --name pcapoptikon_data certego/pcapoptikon
 
 Now, a couple other directories that you may want to create locally on your host are:
 
@@ -19,7 +19,7 @@ Now, a couple other directories that you may want to create locally on your host
 
 You can then run your docker container this way:
 
-    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 pdelsante/pcapoptikon
+    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 certego/pcapoptikon
 
 This command will create a new daemonized docker container, called `pcapoptikon`, mounting `/var/lib/mysql` from `pcapoptikon_data` and mounting `/var/log` and `/var/tmp` from the folders you just created on the host. It will also expose the container's port 8000 on localhost, so that you can simply point your browser to: http://localhost:8000/
 
@@ -27,14 +27,14 @@ Default username and password are `admin:admin`. You will find some useful info 
 
 Should you own a valid ETPro oinkcode, you can supply it to the startup script that way:
 
-    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 pdelsante/pcapoptikon /opt/pcapoptikon/start.sh <your_oinkcode_here>
+    $ sudo docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -p=8000:8000 certego/pcapoptikon /opt/pcapoptikon/start.sh <your_oinkcode_here>
 
 Please note that, in this last case, you have to specify the docker instance's entry point `/opt/pcapoptikon/start.sh` yourself.
 
 ### Working with local.rules
 PCAPOptikon can be very useful when testing your own rules. You can do so by modifying the local.rules file. In this case, I suggest that you mount the whole rules folder as a volume on your local disk, so that you can easily modify them with your favourite editor. As an example:
 
-    $ docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -v=/var/tmp/suricata/rules:/etc/suricata/rules -p=8000:8000 pdelsante/pcapoptikon
+    $ docker run -d --name=pcapoptikon --volumes-from=pcapoptikon_data -v=/var/log/pcapoptikon:/var/log -v=/var/tmp/pcapoptikon:/var/tmp -v=/var/tmp/suricata/rules:/etc/suricata/rules -p=8000:8000 certego/pcapoptikon
 
 This would mount PCAPOptikon's rules dir on your local `/var/tmp/suricata/rules` dir (please make sure it exists).
 
@@ -78,7 +78,7 @@ If you're using the `./start.sh` script which comes with PCAPOptikon, it will do
 ### Python requirements
 First of all, this will clone PCAPOptikon in your current working directory:
 
-    $ git clone https://github.com/pdelsante/pcapoptikon.git
+    $ git clone https://github.com/certego/pcapoptikon.git
 
 **Please consider using VirtualEnv, especially if you already have other projects running on Django versions other than 1.8**. Installing VirtualEnv is extremely easy:
 
