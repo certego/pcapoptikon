@@ -1,4 +1,4 @@
-Django==1.11.23
+Django==1.11.28
 django-tastypie==0.14.2
 django-widget-tweaks==1.4.1
 hexdump==3.2
