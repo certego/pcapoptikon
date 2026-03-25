@@ -3,7 +3,7 @@ django-tastypie==0.14.2
 django-widget-tweaks==1.4.1
 hexdump==3.2
 idstools==0.5.0
-ipython==3.2.1
+ipython==7.16.3
 jsonfield==1.0.3
 MySQL-python==1.2.5
 python-dateutil==2.4.2
